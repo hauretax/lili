@@ -1,28 +1,40 @@
 // quizFrCo.js
 
+let correctAnswer = 0;
+let nbAnswer = 0;
+
+const playSound = (soundFile) => {
+    const audio = new Audio(soundFile);
+    audio.play();
+};
+
 document.addEventListener("DOMContentLoaded", function () {
-    console.log(vocabulary)
     const questionElement = document.getElementById("question");
     const optionsContainer = document.getElementById("options");
+    const options = []
+    let correctAnswer = -1;
 
     function displayQuestion(question, options) {
+        correctAnswer = options.findIndex(objet => objet.fr === question)
         questionElement.textContent = question;
-
-        optionsContainer.innerHTML = ""; 
-
-
-        const ulElement = document.createElement("ul"); 
+        optionsContainer.innerHTML = "";
+        const ulElement = document.createElement("ul");
 
         options.forEach((optionText, index) => {
-            const liElement = document.createElement("li"); 
+            const liElement = document.createElement("li");
             const optionButton = document.createElement("button");
-            optionButton.textContent = optionText.korean; 
+            optionButton.textContent = optionText.korean;
             optionButton.addEventListener("click", () => handleOptionClick(index));
             liElement.appendChild(optionButton);
-            ulElement.appendChild(liElement); 
+            ulElement.appendChild(liElement);
         });
 
         optionsContainer.appendChild(ulElement);
+    }
+
+    function setPoint() {
+        const pointElement = document.getElementById("point");
+        pointElement.innerHTML = correctAnswer + "/" + nbAnswer
     }
 
     function shuffleArray(array) {
@@ -34,7 +46,6 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     function setOptions(initialQuestion) {
-        const options = []
         while (options.length < 3) {
             const option = getRandomQuestionFromVocabulary();
             if (!options.includes(option) && !(option === initialQuestion))
@@ -45,21 +56,25 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     function handleOptionClick(selectedIndex) {
-        // Implémentez ici la logique pour vérifier si la réponse est correcte
-        // Et affichez un feedback à l'utilisateur
+        playSound(options[selectedIndex].sound)
+        console.log('nb!', correctAnswer)
+        nbAnswer++
+        if (correctAnswer != selectedIndex) {
 
-        // Après avoir géré le clic, affichez une nouvelle question
-        const Question = getRandomQuestionFromVocabulary();
-       displayQuestion(Question.fr,setOptions(Question));
+        } else {
+            console.log('correcte!', correctAnswer)
+            correctAnswer++;
+            const Question = getRandomQuestionFromVocabulary();
+            displayQuestion(Question.fr, setOptions(Question));
+        }
+        setPoint()
     }
 
     function getRandomQuestionFromVocabulary() {
         const randomIndex = Math.floor(Math.random() * vocabulary.length);
         return vocabulary[randomIndex];
     }
-
-
     const Question = getRandomQuestionFromVocabulary();
 
-    displayQuestion(Question.fr,setOptions(Question));
+    displayQuestion(Question.fr, setOptions(Question));
 });
