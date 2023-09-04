@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { VocabularyItem, VocabularyService } from '../vocabulary.service'
+import { PointsService } from '../Points.service';
 
 @Component({
   selector: 'app-quizz',
@@ -12,7 +13,7 @@ export class QuizzComponent implements OnInit {
   options: any = [];
   question: string = '';
 
-  constructor(private vocabularyService: VocabularyService) { }
+  constructor(private vocabularyService: VocabularyService, private pointsService: PointsService) { }
 
   ngOnInit(): void {
     this.vocabularyService.getVocabulary().subscribe(data => {
@@ -46,23 +47,18 @@ export class QuizzComponent implements OnInit {
     this.options = tmpOptionsI.map(i => this.vocabularyData[i])
     this.correctAnswer = this.vocabularyData[questionIndex]
     this.question = this.vocabularyData[questionIndex].fr
-    console.log(tmpOptionsI, questionIndex, this.options)
   }
 
 
   onOptionSelected(option: VocabularyItem): void {
     this.playSound(option.sound)
-    // console.log('nb!', correctAnswer)
-    // nbAnswer++
-    // if (correctAnswer != selectedIndex) {
-
-    // } else {
-    //   console.log('correcte!', correctAnswer)
-    //   correctAnswer++;
-    //   const Question = getRandomQuestionFromVocabulary();
-    //   displayQuestion(Question.fr, setOptions(Question));
-    // }
-    // console.log('Option sélectionnée avec l\'ID :', optionId);
+    if (option === this.correctAnswer) {
+      this.pointsService.increasePoints(1)
+      this.setQuizz()
+    } else {
+      console.log('nop')
+    }
+    this.pointsService.increaseTry(1)
   }
 
 }

@@ -1,15 +1,10 @@
-<div id="point">0/0
-</div>
 <div class="content">
   <h1>Quiz de Traduction Inversée</h1>
   <p>Testez vos connaissances en choisissant la traduction coréenne correcte pour le mot français donné.</p>
   <h2>{{ question }}</h2>
   <div class="quiz">
     <ul id="options">
-      <li><button (click)="onOptionSelected(options[0])" >{{ options[0].korean }}</button></li>
-      <li><button (click)="onOptionSelected(options[1])" >{{ options[1].korean }}</button></li>
-      <li><button (click)="onOptionSelected(options[2])"  >{{ options[2].korean }}</button></li>
-      <li><button (click)="onOptionSelected(options[3])" >{{ options[3].korean }}</button></li>
+      <li *ngFor="let option of options" ><button (click)="onOptionSelected(option)" >{{ option.korean }}</button></li>
     </ul>
   </div>
 </div>
